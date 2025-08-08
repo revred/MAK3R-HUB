@@ -1,0 +1,1 @@
+C:\code\ConvertStar\tools\MAK3R-HUB\src-csharp\MAK3R.Core\publish-win-x64\MAK3R.Core.exe

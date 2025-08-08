@@ -1,0 +1,32 @@
+# Development and test files
+test-temp/
+tests/
+src-csharp/MAK3R.Core/obj/
+src-csharp/MAK3R.Core/bin/Debug/
+src-csharp/MAK3R.WebFrameworks/obj/
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.idea/
+
+# Only include the optimized C# executable
+src-csharp/MAK3R.Core/bin/**/*
+src-csharp/MAK3R.Core/obj/**/*
+!src-csharp/MAK3R.Core/publish-win-x64/MAK3R.Core.exe
+
+# Node modules and caches
+node_modules/
+coverage/
+.nyc_output/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Testing artifacts
+test-project-*/
+
+# Development scripts
+*.bat
+launch-*.sh

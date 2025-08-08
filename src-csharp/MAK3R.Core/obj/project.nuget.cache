@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "RlvWQtZrpGA=",
+  "success": true,
+  "projectFilePath": "C:\\code\\ConvertStar\\tools\\MAK3R-HUB\\src-csharp\\MAK3R.Core\\MAK3R.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\revanur\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.8\\microsoft.net.illink.tasks.9.0.8.nupkg.sha512",
+    "C:\\Users\\revanur\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
+    "C:\\Users\\revanur\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\9.0.8\\microsoft.netcore.app.runtime.win-x64.9.0.8.nupkg.sha512",
+    "C:\\Users\\revanur\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\9.0.8\\microsoft.windowsdesktop.app.runtime.win-x64.9.0.8.nupkg.sha512",
+    "C:\\Users\\revanur\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\9.0.8\\microsoft.aspnetcore.app.runtime.win-x64.9.0.8.nupkg.sha512"
+  ],
+  "logs": []
+}

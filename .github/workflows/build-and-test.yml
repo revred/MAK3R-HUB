@@ -1,0 +1,100 @@
+name: MAK3R-HUB Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20, 21]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Install Node.js dependencies
+      run: npm ci
+      
+    - name: Build C# automation engine
+      run: npm run build:production
+      
+    - name: Run comprehensive tests
+      run: npm test
+      
+    - name: Test CLI commands
+      run: |
+        node bin/mak3r-hub.js --version
+        node bin/mak3r-hub.js doctor
+        
+    - name: Package for NPM
+      run: npm pack --dry-run
+      
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      if: matrix.node-version == '20'
+      with:
+        name: mak3r-hub-package
+        path: |
+          MAK3R-HUB-*.tgz
+          src-csharp/MAK3R.Core/publish-win-x64/MAK3R.Core.exe
+
+  performance-test:
+    runs-on: windows-latest
+    needs: build-test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Install dependencies and build
+      run: |
+        npm ci
+        npm run build:production
+        
+    - name: Performance benchmark test
+      run: |
+        echo "=== Performance Benchmarks ==="
+        
+        echo "CLI startup time:"
+        Measure-Command { node bin/mak3r-hub.js --version } | Select-Object TotalMilliseconds
+        
+        echo "Doctor command performance:"
+        Measure-Command { node bin/mak3r-hub.js doctor } | Select-Object TotalMilliseconds
+        
+        echo "Website creation performance:"
+        mkdir perf-test
+        cd perf-test
+        Measure-Command { node ../bin/mak3r-hub.js create perf-landing-page --type landing-page --framework vue-nuxt } | Select-Object TotalMilliseconds
+        cd ..
+        rmdir /s /q perf-test
+        
+        echo "=== Performance benchmarks completed ==="
+      shell: powershell
