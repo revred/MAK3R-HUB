@@ -62,38 +62,71 @@ program
 program
   .command('create')
   .alias('c')
-  .description('Create a new website project')
+  .description('Create a new website project with MAK3R-HUB structure')
   .argument('<name>', 'Project name')
   .option('-t, --type <type>', 'Website type (landing-page|ecommerce|portfolio|blog|saas)', 'landing-page')
-  .option('-f, --framework <framework>', 'Framework (react-next|vue-nuxt|svelte-kit|angular)', 'auto')
+  .option('-f, --framework <framework>', 'Framework (react-next|vue-nuxt|svelte-kit)', 'auto')
   .option('-p, --path <path>', 'Custom project path')
+  .option('--skip-install', 'Skip npm install after creation')
   .action(async (name, options) => {
     try {
-      const args = [
-        'create',
-        name,
-        '--type', options.type,
-        '--framework', options.framework === 'auto' ? await detectOptimalFramework(options.type) : options.framework
-      ];
+      console.log(chalk.blue('🎯 MAK3R-HUB Project Creator'));
+      console.log(chalk.gray(`Creating ${options.type} with ${options.framework === 'auto' ? 'optimal framework' : options.framework}`));
       
-      if (options.path) {
-        args.push('--output', options.path);
-      }
+      // Use JavaScript implementation for project creation
+      const ProjectCreator = require('../lib/project-creator');
+      const creator = new ProjectCreator();
       
-      const result = await executeEngine(args);
+      const framework = options.framework === 'auto' ? 
+        await detectOptimalFramework(options.type) : 
+        options.framework;
       
-      if (result.success && result.project) {
+      const projectOptions = {
+        type: options.type,
+        framework: framework,
+        path: options.path,
+        skipInstall: options.skipInstall
+      };
+      
+      const result = await creator.createProject(name, projectOptions);
+      
+      if (result.success) {
+        console.log(chalk.green('\n✅ Project creation completed!'));
         console.log(chalk.cyan('🚀 Next steps:'));
-        console.log(`   cd ${result.project.name}`);
-        console.log(`   MAK3R-HUB dev`);
-        console.log(`   MAK3R-HUB deploy`);
-      } else if (!result.success) {
+        console.log(chalk.gray(`   cd ${name}`));
+        
+        if (!options.skipInstall) {
+          console.log(chalk.gray(`   cd ${result.project.active_dir} && npm install`));
+        }
+        
+        console.log(chalk.gray(`   ${result.project.launch_command}`));
+        console.log(chalk.gray(`   # Access: http://localhost:${result.project.default_port}`));
+        console.log(chalk.cyan('\n📚 Documentation:'));
+        console.log(chalk.gray('   • Read CLAUDE.md for AI development guidance'));
+        console.log(chalk.gray(`   • MCP service available on port ${result.project.mcp_port}`));
+        console.log(chalk.gray('   • All OS-specific commands pre-configured'));
+        
+      } else {
+        console.error(chalk.red(`❌ Project creation failed: ${result.error}`));
         process.exit(1);
       }
       
     } catch (error) {
-      console.error(chalk.red('❌ Failed to create website:'), error.message);
-      process.exit(1);
+      console.error(chalk.red('❌ Failed to create project:'), error.message);
+      console.error(chalk.yellow('💡 Falling back to C# engine...'));
+      
+      // Fallback to C# engine
+      try {
+        const args = ['create', name, '--type', options.type, '--framework', framework];
+        if (options.path) args.push('--output', options.path);
+        
+        const result = await executeEngine(args);
+        if (!result.success) process.exit(1);
+        
+      } catch (engineError) {
+        console.error(chalk.red('❌ Both JavaScript and C# engines failed'));
+        process.exit(1);
+      }
     }
   });
 
@@ -219,56 +252,276 @@ program
 // MCP Service Management
 program
   .command('mcp <action>')
-  .description('Manage MCP service (start|stop|config|list|test)')
+  .description('Manage MCP service (start|stop|status|info|validate)')
   .option('-p, --port <port>', 'MCP server port', '3001')
   .option('-h, --host <host>', 'MCP server host', 'localhost')
-  .option('-s, --service <service>', 'Service name for config/test operations')
-  .option('--api-key <key>', 'API key for service configuration')
-  .option('--token <token>', 'Access token for service configuration')
+  .option('-c, --command <command>', 'Command to validate')
+  .option('-d, --daemon', 'Run as daemon (background process)')
   .action(async (action, options) => {
     try {
-      const MCPClient = require('../src/mcp/cli');
-      const client = new MCPClient();
-      await client.initialize();
+      const MCPService = require('../lib/mcp-service');
+      const service = new MCPService();
       
       switch (action) {
         case 'start':
-          await client.startServer({ port: options.port, host: options.host });
+          console.log(chalk.blue('🚀 Starting MAK3R-HUB MCP Service...'));
+          await service.start(parseInt(options.port), options.host);
+          
+          if (!options.daemon) {
+            console.log(chalk.gray('\nPress Ctrl+C to stop the service\n'));
+            process.on('SIGINT', async () => {
+              console.log(chalk.yellow('\n⏹️  Stopping MCP service...'));
+              await service.stop();
+              process.exit(0);
+            });
+            
+            // Keep process alive
+            setInterval(() => {}, 1000);
+          }
           break;
+          
         case 'stop':
-          await client.stopServer();
+          // For now, just show how to stop (since we need PID tracking for proper daemon support)
+          console.log(chalk.yellow('⏹️  To stop MCP service:'));
+          console.log(chalk.gray('   • Press Ctrl+C if running in foreground'));
+          console.log(chalk.gray('   • Use process manager if running as daemon'));
+          console.log(chalk.gray(`   • Kill process on port ${options.port}: netstat -ano | findstr :${options.port}`));
           break;
-        case 'config':
-          if (!options.service) {
-            console.error(chalk.red('❌ Service name required for config. Use --service <name>'));
-            process.exit(1);
-          }
-          await client.configureCredentials(options.service, options);
-          break;
-        case 'list':
-          await client.listCredentials();
-          break;
-        case 'test':
-          if (!options.service) {
-            console.error(chalk.red('❌ Service name required for test. Use --service <name>'));
-            process.exit(1);
-          }
-          await client.testService(options.service, options);
-          break;
-        case 'logs':
-          await client.showLogs({ tail: 50 });
-          break;
+          
         case 'status':
-          console.log(chalk.blue('📊 MAK3R-HUB MCP Status'));
-          await client.listCredentials();
+          try {
+            const axios = require('axios');
+            const response = await axios.get(`http://${options.host}:${options.port}/mcp/status`, {
+              timeout: 2000
+            });
+            
+            console.log(chalk.green('✅ MCP Service is running'));
+            console.log(chalk.cyan('📊 Service Information:'));
+            console.log(chalk.gray(`   • Version: ${response.data.version}`));
+            console.log(chalk.gray(`   • MCP Version: ${response.data.mcp_version}`));
+            console.log(chalk.gray(`   • Uptime: ${Math.round(response.data.uptime)}s`));
+            console.log(chalk.gray(`   • Project: ${response.data.project.name}`));
+            console.log(chalk.gray(`   • Framework: ${response.data.project.framework}`));
+            console.log(chalk.gray(`   • OS: ${response.data.project.os}`));
+            
+          } catch (error) {
+            console.log(chalk.red('❌ MCP Service is not running'));
+            console.log(chalk.gray(`   Checked: http://${options.host}:${options.port}`));
+            console.log(chalk.cyan(`   Start with: MAK3R-HUB mcp start --port ${options.port}`));
+          }
           break;
+          
+        case 'info':
+          const info = service.getServiceInfo();
+          console.log(chalk.blue('📋 MAK3R-HUB MCP Service Info'));
+          console.log(chalk.gray(`   Service: ${info.service} v${info.version}`));
+          console.log(chalk.gray(`   MCP Version: ${info.mcp_version}`));
+          console.log(chalk.gray(`   Running: ${info.running ? 'Yes' : 'No'}`));
+          console.log(chalk.gray(`   Endpoint: http://${info.host}:${info.port}`));
+          console.log(chalk.gray(`   Project: ${info.project.name} (${info.project.framework})`));
+          break;
+          
+        case 'validate':
+          if (!options.command) {
+            console.error(chalk.red('❌ Command required for validation. Use --command <cmd>'));
+            process.exit(1);
+          }
+          
+          try {
+            const axios = require('axios');
+            const response = await axios.post(`http://${options.host}:${options.port}/mcp/validate-command`, {
+              command: options.command,
+              context: { source: 'cli' }
+            });
+            
+            const result = response.data;
+            if (result.valid) {
+              console.log(chalk.green(`✅ Command "${options.command}" is valid`));
+            } else {
+              console.log(chalk.red(`❌ Command "${options.command}" is not valid`));
+              console.log(chalk.yellow(`   Reason: ${result.reason}`));
+              if (result.suggestion) {
+                console.log(chalk.cyan(`   Suggestion: ${result.suggestion}`));
+              }
+              if (result.alternative) {
+                console.log(chalk.cyan(`   Alternative: ${result.alternative}`));
+              }
+            }
+          } catch (error) {
+            console.error(chalk.red('❌ Failed to validate command - MCP service may not be running'));
+            console.log(chalk.gray(`   Start MCP service: MAK3R-HUB mcp start`));
+          }
+          break;
+          
         default:
           console.error(chalk.red(`❌ Unknown MCP action: ${action}`));
-          console.log(chalk.cyan('Available actions: start, stop, config, list, test, logs, status'));
+          console.log(chalk.cyan('Available actions: start, stop, status, info, validate'));
+          console.log(chalk.gray('\nExamples:'));
+          console.log(chalk.gray('   MAK3R-HUB mcp start'));
+          console.log(chalk.gray('   MAK3R-HUB mcp status'));
+          console.log(chalk.gray('   MAK3R-HUB mcp validate --command "ls -la"'));
           process.exit(1);
       }
     } catch (error) {
       console.error(chalk.red(`❌ MCP ${action} failed: ${error.message}`));
+      if (error.message.includes('Cannot find module')) {
+        console.log(chalk.yellow('💡 Install missing dependencies: npm install axios'));
+      }
+      process.exit(1);
+    }
+  });
+
+// Configuration management
+program
+  .command('config <action>')
+  .description('Manage MAK3R-HUB configuration (init|show|update|validate|reset)')
+  .option('-k, --key <key>', 'Configuration key for get/set operations')
+  .option('-v, --value <value>', 'Configuration value for set operations')
+  .option('-t, --template <template>', 'Configuration template (default|minimal|advanced)', 'default')
+  .option('-f, --format <format>', 'Output format (json|yaml)', 'json')
+  .action(async (action, options) => {
+    try {
+      const ConfigManager = require('../lib/config-manager');
+      const config = new ConfigManager();
+      
+      switch (action) {
+        case 'init':
+          console.log(chalk.blue('🔧 Initializing MAK3R-HUB configuration...'));
+          const initialized = await config.initialize();
+          if (initialized) {
+            console.log(chalk.green('✅ Configuration initialized successfully'));
+            const info = config.getProjectInfo();
+            console.log(chalk.gray(`   Project: ${info.name}`));
+            console.log(chalk.gray(`   OS: ${config.getEnvironmentInfo().os}`));
+            console.log(chalk.gray(`   Config: .mak3r/config.json`));
+          } else {
+            console.error(chalk.red('❌ Configuration initialization failed'));
+            process.exit(1);
+          }
+          break;
+          
+        case 'show':
+          await config.initialize();
+          const currentConfig = config.getConfiguration();
+          
+          if (options.key) {
+            const value = config.getNestedValue(currentConfig, options.key);
+            if (value !== undefined) {
+              console.log(JSON.stringify(value, null, 2));
+            } else {
+              console.error(chalk.red(`❌ Configuration key not found: ${options.key}`));
+              process.exit(1);
+            }
+          } else {
+            console.log(chalk.blue('📋 Current MAK3R-HUB Configuration:'));
+            console.log(JSON.stringify(currentConfig, null, 2));
+          }
+          break;
+          
+        case 'update':
+          await config.initialize();
+          
+          if (options.key && options.value) {
+            const updates = {};
+            setNestedValue(updates, options.key, parseValue(options.value));
+            const success = await config.updateConfiguration(updates);
+            
+            if (success) {
+              console.log(chalk.green(`✅ Updated ${options.key} = ${options.value}`));
+            } else {
+              console.error(chalk.red('❌ Failed to update configuration'));
+              process.exit(1);
+            }
+          } else {
+            console.error(chalk.red('❌ Both --key and --value are required for updates'));
+            console.log(chalk.cyan('Example: MAK3R-HUB config update --key project.name --value "My Project"'));
+            process.exit(1);
+          }
+          break;
+          
+        case 'validate':
+          await config.initialize();
+          const validation = await config.validateConfiguration();
+          
+          console.log(chalk.blue('🔍 Configuration Validation Results:'));
+          
+          if (validation.valid) {
+            console.log(chalk.green('✅ Configuration is valid'));
+          } else {
+            console.log(chalk.red('❌ Configuration has errors'));
+            validation.errors.forEach(error => {
+              console.log(chalk.red(`   • ${error}`));
+            });
+          }
+          
+          if (validation.warnings.length > 0) {
+            console.log(chalk.yellow('\n⚠️  Warnings:'));
+            validation.warnings.forEach(warning => {
+              console.log(chalk.yellow(`   • ${warning}`));
+            });
+          }
+          
+          if (validation.suggestions.length > 0) {
+            console.log(chalk.cyan('\n💡 Suggestions:'));
+            validation.suggestions.forEach(suggestion => {
+              console.log(chalk.cyan(`   • ${suggestion}`));
+            });
+          }
+          
+          if (!validation.valid) {
+            process.exit(1);
+          }
+          break;
+          
+        case 'reset':
+          await config.initialize();
+          console.log(chalk.yellow(`⚠️  Resetting configuration to ${options.template} template...`));
+          
+          const newConfig = await config.resetConfiguration(options.template);
+          console.log(chalk.green('✅ Configuration reset completed'));
+          break;
+          
+        case 'report':
+          await config.initialize();
+          const report = await config.generateConfigurationReport();
+          
+          console.log(chalk.blue('📊 Configuration Report:'));
+          console.log(chalk.gray(`   Generated: ${report.generated}`));
+          console.log(chalk.gray(`   Project: ${report.project.name} v${report.project.version}`));
+          console.log(chalk.gray(`   OS: ${report.environment.os}`));
+          console.log(chalk.gray(`   Framework: ${report.project.framework || 'Not specified'}`));
+          
+          console.log(chalk.cyan('\n🔧 Features Enabled:'));
+          report.features_enabled.forEach(feature => {
+            console.log(chalk.gray(`   ✓ ${feature.replace(/_/g, ' ')}`));
+          });
+          
+          if (report.recommendations.length > 0) {
+            console.log(chalk.yellow('\n💡 Recommendations:'));
+            report.recommendations.forEach(rec => {
+              console.log(chalk.yellow(`   • ${rec}`));
+            });
+          }
+          break;
+          
+        case 'export':
+          await config.initialize();
+          const exportPath = await config.exportConfiguration(options.format);
+          console.log(chalk.green(`✅ Configuration exported to: ${exportPath}`));
+          break;
+          
+        default:
+          console.error(chalk.red(`❌ Unknown config action: ${action}`));
+          console.log(chalk.cyan('Available actions: init, show, update, validate, reset, report, export'));
+          console.log(chalk.gray('\nExamples:'));
+          console.log(chalk.gray('   MAK3R-HUB config init'));
+          console.log(chalk.gray('   MAK3R-HUB config show --key project.name'));
+          console.log(chalk.gray('   MAK3R-HUB config update --key ports.dev_server --value 3001'));
+          console.log(chalk.gray('   MAK3R-HUB config validate'));
+          process.exit(1);
+      }
+    } catch (error) {
+      console.error(chalk.red(`❌ Config ${action} failed: ${error.message}`));
       process.exit(1);
     }
   });
@@ -323,6 +576,38 @@ async function detectOptimalFramework(websiteType) {
   };
   
   return frameworks[websiteType] || 'vue-nuxt';
+}
+
+function setNestedValue(obj, path, value) {
+  const keys = path.split('.');
+  let current = obj;
+  
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!(keys[i] in current)) {
+      current[keys[i]] = {};
+    }
+    current = current[keys[i]];
+  }
+  
+  current[keys[keys.length - 1]] = value;
+}
+
+function parseValue(value) {
+  // Try to parse as JSON first
+  try {
+    return JSON.parse(value);
+  } catch {
+    // If JSON parsing fails, check for boolean strings
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    
+    // Check for numbers
+    const num = Number(value);
+    if (!isNaN(num) && isFinite(num)) return num;
+    
+    // Return as string
+    return value;
+  }
 }
 
 // Parse command line arguments

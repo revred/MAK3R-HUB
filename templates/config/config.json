@@ -1,0 +1,66 @@
+{
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "safe_name": "{{SAFE_PROJECT_NAME}}",
+    "type": "{{PROJECT_TYPE}}",
+    "version": "1.0.0",
+    "created": "{{CREATED_DATE}}",
+    "mak3r_version": "{{MAK3R_VERSION}}"
+  },
+  "framework": {
+    "primary": "{{FRAMEWORK}}",
+    "version": "{{FRAMEWORK_VERSION}}",
+    "meta_framework": "{{META_FRAMEWORK}}",
+    "features": ["{{FRAMEWORK_FEATURES}}"]
+  },
+  "environment": {
+    "os": "{{OS_TYPE}}",
+    "node_version": "{{NODE_VERSION}}",
+    "package_manager": "{{PACKAGE_MANAGER}}",
+    "shell": "{{SHELL_TYPE}}"
+  },
+  "structure": {
+    "active_dir": "{{ACTIVE_DIR}}",
+    "scripts_dir": "{{SCRIPTS_DIR}}",
+    "docs_dir": "domain",
+    "assets_dir": "visual-input",
+    "config_dir": ".mak3r"
+  },
+  "files": {
+    "main": "{{MAIN_FILE}}",
+    "config": "{{CONFIG_FILE}}",
+    "launch_script": "{{LAUNCH_SCRIPT}}",
+    "cleanup_script": "{{CLEANUP_SCRIPT}}"
+  },
+  "ports": {
+    "dev_server": {{DEFAULT_PORT}},
+    "mcp_service": {{MCP_PORT}},
+    "api_server": {{API_PORT}},
+    "websocket": {{WS_PORT}}
+  },
+  "build": {
+    "output_dir": "{{BUILD_OUTPUT}}",
+    "source_dir": "{{SOURCE_DIR}}",
+    "assets_dir": "{{ASSETS_DIR}}",
+    "public_dir": "{{PUBLIC_DIR}}"
+  },
+  "development": {
+    "auto_reload": true,
+    "source_maps": true,
+    "hot_reload": true,
+    "error_overlay": true
+  },
+  "deployment": {
+    "target": "{{DEPLOYMENT_TARGET}}",
+    "build_command": "{{BUILD_COMMAND}}",
+    "output_directory": "{{OUTPUT_DIRECTORY}}",
+    "environment_variables": {}
+  },
+  "mak3r": {
+    "abstractions_enabled": true,
+    "os_validation_enabled": true,
+    "token_optimization_enabled": true,
+    "auto_documentation_enabled": true,
+    "mcp_integration_enabled": true
+  }
+}

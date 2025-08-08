@@ -1,0 +1,122 @@
+{
+  "mcp": {
+    "version": "0.5.0",
+    "service": {
+      "name": "MAK3R-HUB",
+      "version": "{{MAK3R_VERSION}}",
+      "description": "Universal Claude Code force multiplier for website development",
+      "port": {{MCP_PORT}},
+      "host": "localhost",
+      "protocol": "http",
+      "endpoints": {
+        "status": "/mcp/status",
+        "validate": "/mcp/validate-command",
+        "abstract": "/mcp/abstract-operation",
+        "project": "/mcp/project-info",
+        "rules": "/mcp/claude-rules"
+      }
+    },
+    "capabilities": {
+      "os_validation": {
+        "enabled": true,
+        "detected_os": "{{OS_TYPE}}",
+        "strict_mode": true,
+        "auto_suggestions": true
+      },
+      "command_filtering": {
+        "enabled": true,
+        "block_dangerous": true,
+        "suggest_alternatives": true,
+        "log_violations": true
+      },
+      "token_optimization": {
+        "enabled": true,
+        "cache_responses": true,
+        "use_abstractions": true,
+        "compress_output": false
+      },
+      "project_management": {
+        "enabled": true,
+        "auto_structure": true,
+        "enforce_conventions": true,
+        "sync_documentation": true
+      }
+    }
+  },
+  "project_context": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "{{PROJECT_TYPE}}",
+    "framework": "{{FRAMEWORK}}",
+    "os_type": "{{OS_TYPE}}",
+    "created": "{{CREATED_DATE}}",
+    "structure": {
+      "active_dir": "{{ACTIVE_DIR}}",
+      "scripts_dir": "{{SCRIPTS_DIR}}",
+      "main_file": "{{MAIN_FILE}}",
+      "config_file": "{{CONFIG_FILE}}"
+    },
+    "ports": {
+      "dev_server": {{DEFAULT_PORT}},
+      "mcp_service": {{MCP_PORT}},
+      "api_server": {{API_PORT}}
+    }
+  },
+  "claude_integration": {
+    "token_limits": {
+      "max_context_size": 200000,
+      "prefer_abstractions": true,
+      "cache_common_queries": true
+    },
+    "response_optimization": {
+      "compress_verbose_output": true,
+      "use_structured_responses": true,
+      "minimize_redundancy": true
+    },
+    "error_handling": {
+      "provide_alternatives": true,
+      "suggest_mak3r_commands": true,
+      "prevent_crashes": true
+    }
+  },
+  "api_integrations": {
+    "github": {
+      "enabled": false,
+      "repository": null,
+      "auto_commit": false
+    },
+    "vercel": {
+      "enabled": false,
+      "project": null,
+      "auto_deploy": false
+    },
+    "stripe": {
+      "enabled": false,
+      "environment": "test",
+      "webhook_endpoint": null
+    }
+  },
+  "security": {
+    "cors": {
+      "enabled": true,
+      "allowed_origins": ["http://localhost:*"],
+      "allow_credentials": false
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "max_requests_per_minute": 60,
+      "max_requests_per_hour": 1000
+    },
+    "authentication": {
+      "required": false,
+      "type": null,
+      "secret": null
+    }
+  },
+  "logging": {
+    "level": "info",
+    "file": ".mak3r/logs/mcp-service.log",
+    "max_size": "10MB",
+    "rotate": true,
+    "include_timestamps": true
+  }
+}

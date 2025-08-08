@@ -1,0 +1,183 @@
+{
+  "version": "1.0.0",
+  "mak3r_version": "{{MAK3R_VERSION}}",
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "framework": "{{FRAMEWORK}}",
+    "os_type": "{{OS_TYPE}}",
+    "created_date": "{{CREATED_DATE}}"
+  },
+  "claude_code_integration": {
+    "mcp_service": {
+      "enabled": true,
+      "endpoint": "http://localhost:{{MCP_PORT}}/mcp",
+      "version": "0.5.0",
+      "capabilities": [
+        "os_validation",
+        "command_filtering",
+        "token_optimization",
+        "project_structure_management"
+      ]
+    },
+    "os_awareness": {
+      "detected_os": "{{OS_TYPE}}",
+      "command_validation": {
+        "enabled": true,
+        "strict_mode": true,
+        "auto_correct": false
+      },
+      "allowed_commands": "{{ALLOWED_COMMANDS_PATTERN}}",
+      "blocked_commands": "{{BLOCKED_COMMANDS_PATTERN}}"
+    },
+    "token_optimization": {
+      "use_mak3r_abstractions": true,
+      "prefer_high_level_commands": true,
+      "cache_common_operations": true,
+      "reduce_verbose_output": true
+    }
+  },
+  "command_rules": {
+    "windows": {
+      "allowed_patterns": [
+        "TASKKILL",
+        "dir",
+        "type", 
+        "copy",
+        "del",
+        "xcopy",
+        "timeout",
+        "start",
+        "npm",
+        "node",
+        "dotnet",
+        "batch-ops\\\\.*\\.bat"
+      ],
+      "blocked_patterns": [
+        "bash",
+        "sh", 
+        "ls",
+        "cat",
+        "grep",
+        "chmod",
+        "kill",
+        "killall",
+        "pkill",
+        "\\./.*\\.sh"
+      ],
+      "auto_replacements": {
+        "ls": "dir",
+        "cat": "type",
+        "rm": "del",
+        "cp": "copy"
+      }
+    },
+    "unix": {
+      "allowed_patterns": [
+        "kill",
+        "killall", 
+        "pkill",
+        "ls",
+        "cat",
+        "grep",
+        "cp",
+        "rm",
+        "chmod",
+        "bash",
+        "sh",
+        "npm",
+        "node",
+        "dotnet",
+        "\\./scripts/.*\\.sh"
+      ],
+      "blocked_patterns": [
+        "TASKKILL",
+        "dir",
+        "type",
+        "del",
+        "xcopy",
+        "start",
+        "cmd",
+        ".*\\.bat"
+      ],
+      "auto_replacements": {
+        "dir": "ls",
+        "type": "cat",
+        "del": "rm",
+        "copy": "cp"
+      }
+    }
+  },
+  "project_structure": {
+    "enforce_conventions": true,
+    "auto_create_missing": true,
+    "required_directories": [
+      "{{ACTIVE_DIR}}",
+      "{{SCRIPTS_DIR}}",
+      "domain",
+      "visual-input",
+      ".mak3r"
+    ],
+    "required_files": [
+      "CLAUDE.md",
+      "README.md", 
+      "{{ACTIVE_DIR}}/CLAUDE.md",
+      "{{ACTIVE_DIR}}/package.json",
+      "{{SCRIPTS_DIR}}/CLAUDE.md",
+      "domain/CLAUDE.md",
+      ".mak3r/config.json"
+    ]
+  },
+  "mak3r_abstractions": {
+    "file_operations": {
+      "create_component": "MAK3R-HUB create component <name>",
+      "create_page": "MAK3R-HUB create page <name>",
+      "create_api": "MAK3R-HUB create api <name>",
+      "create_test": "MAK3R-HUB create test <name>"
+    },
+    "build_operations": {
+      "build": "MAK3R-HUB build",
+      "build_production": "MAK3R-HUB build --production",
+      "test": "MAK3R-HUB test",
+      "lint": "MAK3R-HUB lint"
+    },
+    "server_operations": {
+      "start_dev": "MAK3R-HUB dev",
+      "start_server": "{{LAUNCH_COMMAND}}",
+      "stop_servers": "{{CLEANUP_COMMAND}}",
+      "restart": "MAK3R-HUB restart"
+    },
+    "deployment_operations": {
+      "deploy_staging": "MAK3R-HUB deploy staging",
+      "deploy_production": "MAK3R-HUB deploy production",
+      "preview": "MAK3R-HUB preview"
+    }
+  },
+  "claude_guidance": {
+    "preferred_workflow": [
+      "1. Use MAK3R-HUB commands instead of manual operations",
+      "2. Check MCP service status before complex tasks",
+      "3. Follow OS-specific patterns defined in CLAUDE.md", 
+      "4. Reference domain/ folder for project requirements",
+      "5. Use high-level abstractions to reduce token usage"
+    ],
+    "common_mistakes_to_avoid": [
+      "Using wrong OS commands (Windows vs Unix/Linux)",
+      "Manual file/folder creation instead of MAK3R-HUB commands",
+      "Ignoring MCP service validation rules",
+      "Verbose operations when abstractions are available",
+      "Not checking .mak3r/ configuration before operations"
+    ],
+    "optimization_tips": [
+      "Leverage MAK3R-HUB's intelligent defaults",
+      "Use batch operations for multiple similar tasks",
+      "Reference cached project context from .mak3r/",
+      "Prefer single high-level commands over multi-step processes",
+      "Let MCP service handle OS-specific adaptations"
+    ]
+  },
+  "validation": {
+    "schema_version": "1.0.0",
+    "last_updated": "{{CREATED_DATE}}",
+    "checksum": "{{CONFIG_CHECKSUM}}"
+  }
+}
