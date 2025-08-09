@@ -1,0 +1,50 @@
+extension:
+  name: system
+  enabled: true
+  priority: 1
+  
+tools:
+  m3r__system__get_info:
+    enabled: true
+    cache_ttl: 30  # Cache for 30 seconds
+    
+  m3r__system__check_service:
+    enabled: true
+    timeout: 10000
+    
+  m3r__system__run_diagnostics:
+    enabled: true
+    cache_ttl: 60  # Cache for 1 minute
+    
+  m3r__system__get_safe_commands:
+    enabled: true
+    cache_ttl: 300  # Cache for 5 minutes
+    
+  m3r__system__execute_safe_command:
+    enabled: true
+    timeout: 30000
+    max_output_size: 1048576  # 1MB
+    
+settings:
+  os_commands_enabled: true
+  safe_mode: true
+  max_command_timeout: 30000
+  allowed_operations:
+    - dir
+    - ls
+    - type
+    - cat
+    - ping
+    - node
+    - npm
+    - git
+    
+security:
+  forbidden_commands:
+    - rm -rf
+    - del /f /s /q
+    - format
+    - fdisk
+    - sudo rm
+    - shutdown
+    - reboot

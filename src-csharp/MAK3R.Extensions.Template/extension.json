@@ -1,0 +1,49 @@
+{
+  "extension": {
+    "name": "template-extension",
+    "version": "1.0.0",
+    "description": "Template C# extension demonstrating MCP integration patterns",
+    "author": "MAK3R Team",
+    "enabled": true,
+    "priority": 999,
+    "category": "example"
+  },
+  "configuration": {
+    "enableLogging": true,
+    "logLevel": "INFO",
+    "timeout": 60,
+    "maxMemoryMB": 100
+  },
+  "tools": {
+    "m3r__template__hello": {
+      "enabled": true,
+      "timeout": 10,
+      "category": "example"
+    },
+    "m3r__template__echo": {
+      "enabled": true,
+      "timeout": 5,
+      "category": "example"
+    },
+    "m3r__template__system_info": {
+      "enabled": true,
+      "timeout": 15,
+      "cache": true,
+      "category": "diagnostics"
+    },
+    "m3r__template__validate_input": {
+      "enabled": true,
+      "timeout": 30,
+      "category": "validation"
+    }
+  },
+  "dependencies": {
+    "dotnet": ">=9.0.0",
+    "mak3r-core": ">=1.0.0"
+  },
+  "security": {
+    "sandboxed": true,
+    "allowedOperations": ["filesystem-read", "system-info"],
+    "forbiddenOperations": ["network-access", "process-spawn"]
+  }
+}

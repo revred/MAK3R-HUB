@@ -1,0 +1,41 @@
+extension:
+  name: dependency-manager
+  enabled: true
+  priority: 4
+
+tools:
+  m3r__deps__detect_missing:
+    enabled: true
+    cache_ttl: 60
+    description: "Detect all missing development dependencies"
+    
+  m3r__deps__install_dependency:
+    enabled: true
+    timeout: 300000  # 5 minutes for installs
+    description: "Auto-install missing dependency"
+    
+  m3r__deps__verify_installation:
+    enabled: true
+    cache_ttl: 30
+    description: "Verify if dependency is properly installed"
+    
+  m3r__deps__get_package_manager:
+    enabled: true
+    cache_ttl: 300
+    description: "Get available package managers for platform"
+
+settings:
+  supported_dependencies:
+    - git
+    - nodejs
+    - npm
+    - python
+    - dotnet
+    - vscode
+  auto_install_enabled: false  # Requires user consent
+  verification_timeout: 30000
+  
+security:
+  require_user_consent: true
+  encrypted_credentials: true
+  secure_storage: true

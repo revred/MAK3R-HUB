@@ -1,0 +1,30 @@
+{
+  "name": "@mak3r/extension-sharputil",
+  "version": "1.0.0",
+  "description": "SharpUtility integration extension for MAK3R-HUB - provides robust Windows-native file operations and server management",
+  "private": true,
+  "main": "extension.js",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "peerDependencies": {
+    "@mak3r/hub-core": "^1.0.0"
+  },
+  "keywords": [
+    "sharputil",
+    "windows", 
+    "automation",
+    "server-management",
+    "file-operations",
+    "mcp",
+    "diagnostics"
+  ],
+  "author": "MAK3R Team",
+  "license": "MIT",
+  "os": [
+    "win32"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "extension": {
+    "name": "example-extension",
+    "version": "1.0.0",
+    "description": "Complete example C# extension demonstrating MCP patterns and best practices",
+    "author": "MAK3R-HUB Team",
+    "enabled": true,
+    "category": "example",
+    "tags": ["example", "demo", "tutorial", "mcp"],
+    
+    "configuration": {
+      "logLevel": "INFO",
+      "enableHealthChecks": true,
+      "healthCheckInterval": 60,
+      "maxMemoryUsageMB": 50,
+      "timeoutSeconds": 30
+    },
+    
+    "capabilities": {
+      "fileOperations": ["read", "create_temp", "list"],
+      "systemInfo": true,
+      "errorHandling": true,
+      "healthChecks": true
+    },
+    
+    "tools": [
+      {
+        "name": "m3r__example__hello",
+        "description": "Simple hello world command with optional name parameter",
+        "category": "example",
+        "timeout": 5
+      },
+      {
+        "name": "m3r__example__system_info", 
+        "description": "Get comprehensive system information",
+        "category": "system",
+        "timeout": 10
+      },
+      {
+        "name": "m3r__example__file_operations",
+        "description": "Demonstrate safe file operations with validation", 
+        "category": "file",
+        "timeout": 15
+      },
+      {
+        "name": "m3r__example__error_demo",
+        "description": "Demonstrate error handling patterns",
+        "category": "testing",
+        "timeout": 40
+      }
+    ],
+
+    "security": {
+      "allowFileAccess": true,
+      "allowNetworkAccess": false,
+      "allowRegistryAccess": false,
+      "restrictedPaths": [],
+      "sandbox": false
+    },
+
+    "dependencies": [],
+    "conflicts": [],
+    
+    "metadata": {
+      "documentation": "https://github.com/username/MAK3R-HUB/docs/extensions/example",
+      "repository": "https://github.com/username/MAK3R-HUB",
+      "license": "MIT",
+      "keywords": ["example", "tutorial", "mcp", "csharp", "extension"]
+    }
+  }
+}

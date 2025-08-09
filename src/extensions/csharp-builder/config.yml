@@ -1,0 +1,127 @@
+extension:
+  name: csharp-builder
+  enabled: true
+  priority: 3
+
+tools:
+  # Core Project Management
+  m3r__csharp__initialize:
+    enabled: true
+    cache_ttl: 60
+    description: "Initialize and verify C# toolchain"
+    
+  m3r__csharp__get_templates:
+    enabled: true
+    cache_ttl: 300
+    description: "Get available C# project templates"
+    
+  m3r__csharp__create_project:
+    enabled: true
+    timeout: 30000
+    description: "Create new C# project with optimizations"
+    
+  m3r__csharp__create_solution:
+    enabled: true
+    timeout: 15000
+    description: "Create new solution file"
+    
+  m3r__csharp__add_project_to_solution:
+    enabled: true  
+    timeout: 10000
+    description: "Add project to existing solution"
+
+  # Build & Compilation
+  m3r__csharp__build_project:
+    enabled: true
+    timeout: 60000
+    description: "Build C# project with configuration options"
+    
+  m3r__csharp__publish_project:
+    enabled: true
+    timeout: 120000
+    description: "Publish C# project for deployment"
+    
+  m3r__csharp__clean_project:
+    enabled: true
+    timeout: 30000
+    description: "Clean project build artifacts"
+
+  # Package Management
+  m3r__csharp__add_nuget_package:
+    enabled: true
+    timeout: 45000
+    description: "Add NuGet package to project"
+    
+  m3r__csharp__remove_nuget_package:
+    enabled: true
+    timeout: 30000
+    description: "Remove NuGet package from project"
+    
+  m3r__csharp__restore_packages:
+    enabled: true
+    timeout: 60000
+    description: "Restore NuGet packages"
+
+  # Testing & Quality
+  m3r__csharp__run_tests:
+    enabled: true
+    timeout: 120000
+    description: "Run project tests with reporting"
+    
+  m3r__csharp__code_analysis:
+    enabled: true
+    timeout: 60000
+    description: "Run static code analysis"
+
+settings:
+  dotnet_sdk_required: true
+  auto_optimize_projects: true
+  default_framework: "net9.0"
+  default_configuration: "Release"
+  default_runtime: "win-x64"
+  max_concurrent_builds: 2
+  enable_trimming: true
+  enable_single_file: true
+  
+build_configurations:
+  debug:
+    configuration: "Debug"
+    optimizations_enabled: false
+    debug_symbols: true
+    
+  release:
+    configuration: "Release" 
+    optimizations_enabled: true
+    debug_symbols: false
+    single_file: true
+    self_contained: true
+    trimmed: true
+
+project_templates:
+  console: "Console Application"
+  classlib: "Class Library"
+  webapi: "ASP.NET Core Web API"
+  blazorserver: "Blazor Server App"
+  blazorwasm: "Blazor WebAssembly App"
+  winforms: "Windows Forms App"
+  wpf: "WPF Application"
+  
+security:
+  allowed_project_types:
+    - console
+    - classlib 
+    - webapi
+    - blazorserver
+    - blazorwasm
+    - winforms
+    - wpf
+  forbidden_operations:
+    - "system"
+    - "registry"
+    - "kernel"
+  max_project_size_mb: 1000
+  
+monitoring:
+  build_performance_tracking: true
+  error_reporting: true
+  success_metrics: true

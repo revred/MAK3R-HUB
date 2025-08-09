@@ -1,0 +1,25 @@
+{
+  "name": "@mak3r/extension-dependency-manager",
+  "version": "1.0.0",
+  "description": "Dependency Manager extension for MAK3R-HUB - auto-install and manage development dependencies",
+  "private": true,
+  "main": "extension.js",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "peerDependencies": {
+    "@mak3r/hub-core": "^1.0.0"
+  },
+  "keywords": [
+    "dependencies",
+    "package-management",
+    "auto-install",
+    "development-tools",
+    "mcp"
+  ],
+  "author": "MAK3R Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

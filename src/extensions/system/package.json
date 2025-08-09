@@ -1,0 +1,22 @@
+{
+  "name": "@mak3r/extension-system",
+  "version": "1.0.0",
+  "description": "System diagnostics and OS-specific commands extension for MAK3R-HUB",
+  "private": true,
+  "main": "extension.js",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "peerDependencies": {
+    "@mak3r/hub-core": "^1.0.0"
+  },
+  "keywords": [
+    "system",
+    "diagnostics",
+    "os",
+    "commands",
+    "mcp"
+  ],
+  "author": "MAK3R Team",
+  "license": "MIT"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@mak3r/extension-csharp-builder",
+  "version": "1.0.0", 
+  "description": "C# Builder extension for MAK3R-HUB - provides comprehensive .NET development automation including project creation, building, publishing, and testing",
+  "private": true,
+  "main": "extension.js",
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  },
+  "peerDependencies": {
+    "@mak3r/hub-core": "^1.0.0"
+  },
+  "keywords": [
+    "csharp",
+    "dotnet",
+    "build",
+    "automation", 
+    "mcp",
+    "project-management",
+    "nuget",
+    "publishing"
+  ],
+  "author": "MAK3R Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

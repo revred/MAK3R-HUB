@@ -1,0 +1,194 @@
+extension:
+  name: sharputil
+  enabled: true
+  priority: 2
+  os_compatibility:
+    - win32
+
+tools:
+  # Query & Discovery Tools
+  m3r__sharputil__query_capabilities:
+    enabled: true
+    cache_ttl: 300  # Cache for 5 minutes
+    description: "Get all available sharpUtility functions and capabilities"
+    
+  m3r__sharputil__get_command_help:
+    enabled: true
+    cache_ttl: 600  # Cache for 10 minutes
+    description: "Get detailed help for specific SharpUtil command"
+    
+  m3r__sharputil__get_best_practices:
+    enabled: true
+    cache_ttl: 3600  # Cache for 1 hour
+    description: "Get usage best practices and safety protocols"
+    
+  m3r__sharputil__check_executable:
+    enabled: true
+    cache_ttl: 60   # Cache for 1 minute
+    description: "Check if SharpUtility executable is available"
+
+  # Project Discovery & Detection
+  m3r__sharputil__discover_projects:
+    enabled: true
+    timeout: 15000
+    description: "Auto-discover Vue/Nuxt projects on filesystem"
+    command_key: "A"
+    
+  m3r__sharputil__scan_servers:
+    enabled: true
+    timeout: 10000
+    description: "Check active development servers on common ports"
+    command_key: "B"
+    
+  m3r__sharputil__analyze_project:
+    enabled: true
+    timeout: 20000
+    description: "Deep analysis of project dependencies and configuration" 
+    command_key: "C"
+    
+  m3r__sharputil__monitor_servers:
+    enabled: true
+    timeout: 30000
+    description: "Real-time monitoring of active servers"
+    command_key: "D"
+
+  # Smart Server Management
+  m3r__sharputil__smart_start:
+    enabled: true
+    timeout: 30000
+    description: "Auto-detect and launch best available project"
+    command_key: "E"
+    
+  m3r__sharputil__kill_servers:
+    enabled: true
+    timeout: 15000
+    description: "Terminate all Node.js development servers"
+    command_key: "F"
+    
+  m3r__sharputil__health_check:
+    enabled: true
+    timeout: 20000
+    description: "Verify health of all discovered projects"
+    command_key: "G"
+    
+  m3r__sharputil__performance_analysis:
+    enabled: true
+    timeout: 25000
+    description: "Analyze system performance metrics"
+    command_key: "H"
+
+  # Diagnostics & Anomaly Detection
+  m3r__sharputil__anomaly_scan:
+    enabled: true
+    timeout: 30000
+    description: "Detect errors, conflicts, and system issues"
+    command_key: "I"
+    
+  m3r__sharputil__resource_analysis:
+    enabled: true
+    timeout: 15000
+    description: "Analyze memory, CPU, and disk usage"
+    command_key: "J"
+    
+  m3r__sharputil__dependency_check:
+    enabled: true
+    timeout: 25000
+    description: "Validate project dependencies health"
+    command_key: "K"
+    
+  m3r__sharputil__security_scan:
+    enabled: true
+    timeout: 45000
+    description: "Scan for security vulnerabilities"
+    command_key: "L"
+
+  # File Operations
+  m3r__sharputil__copy_files:
+    enabled: true
+    timeout: 60000
+    description: "Robust file/directory copying with verification"
+    command_key: "Q"
+    
+  m3r__sharputil__move_files:
+    enabled: true
+    timeout: 60000
+    description: "Safe file/directory moving operations"
+    command_key: "R"
+    
+  m3r__sharputil__delete_files:
+    enabled: true
+    timeout: 30000
+    description: "Safe deletion with confirmation"
+    command_key: "S"
+    
+  m3r__sharputil__analyze_filesystem:
+    enabled: true
+    timeout: 20000
+    description: "Analyze file system structure and usage"
+    command_key: "T"
+    
+  m3r__sharputil__bulk_operations:
+    enabled: true
+    timeout: 120000
+    description: "Batch processing of multiple files"
+    command_key: "U"
+    
+  m3r__sharputil__verify_integrity:
+    enabled: true
+    timeout: 45000
+    description: "Verify file integrity and checksums"
+    command_key: "V"
+
+  # GUI & Direct Launch
+  m3r__sharputil__launch_gui:
+    enabled: true
+    timeout: 10000
+    description: "Launch real-time monitoring dashboard"
+    command_key: "GUI"
+    
+  m3r__sharputil__launch_nuxt:
+    enabled: true
+    timeout: 30000
+    description: "Direct Nuxt Hello World launch"
+    command_key: "Z"
+
+  # Direct Command Execution
+  m3r__sharputil__execute_command:
+    enabled: true
+    timeout: 60000
+    max_output_size: 2097152  # 2MB
+    description: "Execute any SharpUtil command with arguments"
+
+settings:
+  executable_paths:
+    - "batch-ops\\sharpUtilityGUI.exe"
+    - "..\\..\\batch-ops\\sharpUtilityGUI.exe" 
+    - "..\\..\\..\\batch-ops\\sharpUtilityGUI.exe"
+  os_commands_enabled: true
+  safe_mode: true
+  max_concurrent_operations: 3
+  gui_mode_preferred: true
+  auto_discovery_enabled: true
+  
+security:
+  windows_native_only: true
+  forbidden_operations:
+    - "format"
+    - "fdisk"  
+    - "del /f /s /q"
+    - "rm -rf"
+  allowed_file_extensions:
+    - ".js"
+    - ".vue"
+    - ".ts"
+    - ".json"
+    - ".md"
+    - ".bat"
+    - ".exe"
+  max_file_size_mb: 100
+  
+monitoring:
+  health_check_interval: 300  # 5 minutes
+  performance_monitoring: true
+  error_tracking: true
+  gui_integration: true
