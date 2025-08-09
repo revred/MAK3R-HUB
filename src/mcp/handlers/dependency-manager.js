@@ -142,7 +142,9 @@ class DependencyManager {
   async checkGit() {
     try {
       const version = execSync('git --version', { encoding: 'utf8' }).trim();
-      const path = execSync('where git', { encoding: 'utf8' }).trim();
+      const path = process.platform === 'win32' 
+        ? execSync('where git', { encoding: 'utf8' }).trim()
+        : execSync('which git', { encoding: 'utf8' }).trim();
       return {
         installed: true,
         version: version.replace('git version ', ''),
@@ -156,7 +158,9 @@ class DependencyManager {
   async checkNodeJS() {
     try {
       const version = execSync('node --version', { encoding: 'utf8' }).trim();
-      const path = execSync('where node', { encoding: 'utf8' }).trim();
+      const path = process.platform === 'win32' 
+        ? execSync('where node', { encoding: 'utf8' }).trim()
+        : execSync('which node', { encoding: 'utf8' }).trim();
       return {
         installed: true,
         version: version.replace('v', ''),
