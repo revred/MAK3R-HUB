@@ -83,6 +83,9 @@ namespace MAK3R.Core
                 };
 
                 using var process = Process.Start(processInfo);
+                if (process == null)
+                    throw new InvalidOperationException("Failed to start process");
+                    
                 var output = await process.StandardOutput.ReadToEndAsync();
                 var error = await process.StandardError.ReadToEndAsync();
                 await process.WaitForExitAsync();

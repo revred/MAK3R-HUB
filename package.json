@@ -1,10 +1,10 @@
 {
-  "name": "MAK3R-HUB",
-  "version": "0.1.0",
+  "name": "mak3r-hub",
+  "version": "0.2.1",
   "description": "Universal Claude Code force multiplier for website development",
   "main": "lib/index.js",
   "bin": {
-    "MAK3R-HUB": "bin/mak3r-hub.js"
+    "mak3r-hub": "bin/mak3r-hub.js"
   },
   "scripts": {
     "dev": "node bin/mak3r-hub.js",
@@ -13,8 +13,8 @@
     "test:mcp": "node tests/mcp.test.js",
     "test:jest": "jest",
     "build": "npm run build:csharp && npm run build:package",
-    "build:csharp": "powershell -Command \"cd src-csharp/MAK3R.Core && dotnet build\"",
-    "build:production": "powershell -Command \"cd src-csharp/MAK3R.Core && dotnet publish -c Release --self-contained -r win-x64 -o publish-win-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false\"",
+    "build:csharp": "powershell -Command \"cd src-csharp/MAK3R.Core; dotnet build\"",
+    "build:production": "powershell -Command \"cd src-csharp/MAK3R.Core; dotnet publish -c Release --self-contained -r win-x64 -o publish-win-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false\"",
     "build:package": "npm pack",
     "lint": "eslint lib/ bin/ --fix",
     "docs": "generate-docs",

@@ -65,7 +65,7 @@ namespace MAK3R.Core
             var name = args[1];
             var type = GetArgValue(args, "--type", "landing-page");
             var framework = GetArgValue(args, "--framework", "vue-nuxt");
-            var output = GetArgValue(args, "--output", null);
+            var output = GetArgValue(args, "--output", string.Empty);
 
             try
             {
@@ -168,7 +168,7 @@ namespace MAK3R.Core
         {
             var projectPath = GetArgValue(args, "--project", ".");
             var deployPlatform = GetArgValue(args, "--platform", "auto");
-            var domain = GetArgValue(args, "--domain", null);
+            var domain = GetArgValue(args, "--domain", string.Empty);
 
             try
             {
