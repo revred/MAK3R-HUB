@@ -565,6 +565,136 @@ program
     }
   });
 
+// Extension management command
+program
+  .command('extension <action> [name]')
+  .alias('ext')
+  .description('Manage extensions (list|mount|unmount|info|exec)')
+  .option('--command <cmd>', 'Command to execute with ext exec')
+  .action(async (action, name, options) => {
+    try {
+      console.log(chalk.blue('🔧 MAK3R-HUB Extension Manager'));
+      
+      const ExtensionManager = require('../lib/extension-manager');
+      const manager = new ExtensionManager();
+      
+      switch (action.toLowerCase()) {
+        case 'list':
+        case 'ls':
+          const extensions = await manager.listExtensions();
+          console.log(chalk.cyan('\n📦 Available Extensions:'));
+          if (extensions.length === 0) {
+            console.log(chalk.gray('   No extensions found in tools/ directory'));
+            return;
+          }
+          extensions.forEach(ext => {
+            const status = ext.mounted ? chalk.green('[MOUNTED]') : chalk.gray('[AVAILABLE]');
+            console.log(`   ${status} ${chalk.white(ext.name)} v${ext.version} - ${ext.description}`);
+            if (ext.platform && ext.platform !== process.platform) {
+              console.log(chalk.yellow(`     ⚠️  Platform: ${ext.platform} (current: ${process.platform})`));
+            }
+          });
+          break;
+          
+        case 'mount':
+          if (!name) {
+            console.error(chalk.red('❌ Extension name required: mak3r-hub ext mount <name>'));
+            process.exit(1);
+          }
+          console.log(chalk.cyan(`\n🔗 Mounting extension: ${name}`));
+          const mountResult = await manager.mount(name);
+          if (mountResult.success) {
+            console.log(chalk.green(`✅ ${name} extension mounted successfully`));
+            if (mountResult.symlinks) {
+              console.log(chalk.gray('   Created symlinks:'));
+              mountResult.symlinks.forEach(link => {
+                console.log(chalk.gray(`     ${link.from} → ${link.to}`));
+              });
+            }
+          } else {
+            console.error(chalk.red(`❌ Failed to mount ${name}: ${mountResult.error}`));
+            process.exit(1);
+          }
+          break;
+          
+        case 'unmount':
+        case 'umount':
+          if (!name) {
+            console.error(chalk.red('❌ Extension name required: mak3r-hub ext unmount <name>'));
+            process.exit(1);
+          }
+          console.log(chalk.cyan(`\n🔗 Unmounting extension: ${name}`));
+          const unmountResult = await manager.unmount(name);
+          if (unmountResult.success) {
+            console.log(chalk.green(`✅ ${name} extension unmounted successfully`));
+          } else {
+            console.error(chalk.red(`❌ Failed to unmount ${name}: ${unmountResult.error}`));
+            process.exit(1);
+          }
+          break;
+          
+        case 'info':
+          if (!name) {
+            console.error(chalk.red('❌ Extension name required: mak3r-hub ext info <name>'));
+            process.exit(1);
+          }
+          const info = await manager.getExtensionInfo(name);
+          if (info) {
+            console.log(chalk.cyan(`\n📋 Extension: ${info.name}`));
+            console.log(`   Version: ${info.version}`);
+            console.log(`   Description: ${info.description}`);
+            console.log(`   Platform: ${info.platform || 'any'}`);
+            console.log(`   Status: ${info.mounted ? chalk.green('MOUNTED') : chalk.gray('AVAILABLE')}`);
+            if (info.capabilities) {
+              console.log(`   Capabilities: ${info.capabilities.join(', ')}`);
+            }
+            if (info.commands) {
+              console.log('   Commands:');
+              Object.entries(info.commands).forEach(([cmd, desc]) => {
+                console.log(`     ${cmd}: ${desc.description || desc}`);
+              });
+            }
+          } else {
+            console.error(chalk.red(`❌ Extension ${name} not found`));
+            process.exit(1);
+          }
+          break;
+          
+        case 'exec':
+        case 'execute':
+          if (!name) {
+            console.error(chalk.red('❌ Extension name required: mak3r-hub ext exec <name> --command <cmd>'));
+            process.exit(1);
+          }
+          if (!options.command) {
+            console.error(chalk.red('❌ Command required: mak3r-hub ext exec <name> --command <cmd>'));
+            process.exit(1);
+          }
+          console.log(chalk.cyan(`\n⚡ Executing ${options.command} on ${name}`));
+          const execResult = await manager.execute(name, options.command);
+          if (execResult.success) {
+            console.log(chalk.green('✅ Command executed successfully'));
+            if (execResult.output) {
+              console.log(execResult.output);
+            }
+          } else {
+            console.error(chalk.red(`❌ Command failed: ${execResult.error}`));
+            process.exit(1);
+          }
+          break;
+          
+        default:
+          console.error(chalk.red(`❌ Unknown action: ${action}`));
+          console.log(chalk.yellow('Available actions: list, mount, unmount, info, exec'));
+          process.exit(1);
+      }
+      
+    } catch (error) {
+      console.error(chalk.red('❌ Extension manager error:'), error.message);
+      process.exit(1);
+    }
+  });
+
 // Utility functions
 async function detectOptimalFramework(websiteType) {
   const frameworks = {
